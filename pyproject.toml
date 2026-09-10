@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "CPanalysistools"
+version = "0.0.1"
+authors = [
+  { name="Matthew Warner", email="matthew.warner@postgrad.manchester.ac.uk"},
+]
+description = "Crystal plasticity analysis tools for Python from DAMASK simulations."
+readme = "README.md"
+requires-python = ">=3.11"
+
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "arviz",
+    "damask",
+    "matflow",
+    "matplotlib",
+    "numpy",
+    "pymc",
+    "pytensor",
+    "pyvista",
+    "pyvoro2",
+    "scikit-image",
+    "scikit-learn",
+    "scipy",
+]
+
+#[project.urls]
+#Homepage = "https://github.com/LightForm-group/surrogatetools"
+#Issues = "https://github.com/LightForm-group/surrogatetools/issues"
