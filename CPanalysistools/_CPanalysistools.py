@@ -8,7 +8,6 @@ import matflow as mf
 import sklearn
 import skimage
 import pyvoro2
-from skpatial.objects import Plane
 from tqdm import tqdm
 import pandas as pd
 
