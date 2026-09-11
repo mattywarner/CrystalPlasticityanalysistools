@@ -256,10 +256,10 @@ class extractDAMASKdata:
 
         return all_new_slip_dirs, all_new_slip_norms
 
-    def extract_accum_plastic_strain_energy_density(damask_file, mat_file, rve_shape):
+    def extract_accum_plastic_strain_energy_density(self, damask_file, mat_file, rve_shape):
         result = damask.Result(damask_file)
 
-        slip_dirs, slip_norms = extract_slip_systems(mat_file)
+        slip_dirs, slip_norms = self.extract_slip_systems(mat_file)
 
         total_plastic_work_arrs = []
 
@@ -271,7 +271,7 @@ class extractDAMASKdata:
                 new_slip_dirs, new_slip_norms = slip_dirs, slip_norms
 
             else:
-                new_slip_dirs, new_slip_norms = update_slip_systems(x, slip_dirs, slip_norms, rve_shape)
+                new_slip_dirs, new_slip_norms = self.update_slip_systems(x, slip_dirs, slip_norms, rve_shape)
 
             sigma = x.get('sigma').reshape(rve_shape.extend([3,3]), order = 'F')
 
