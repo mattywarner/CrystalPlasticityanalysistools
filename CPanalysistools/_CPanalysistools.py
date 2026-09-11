@@ -227,7 +227,7 @@ class extractDAMASKdata:
 
         return equiv_vM_strains, r_vals
 
-    def extract_slip_systems(material_file):
+    def extract_slip_systems(self, material_file):
         mat = damask.ConfigMaterial.load(material_file)
         crystal_structure = damask.Crystal(lattice = mat['phase']['Cu']['lattice'])
         slip_dirs = crystal_structure.kinematics('slip')['direction'][0]
@@ -235,7 +235,7 @@ class extractDAMASKdata:
 
         return slip_dirs, slip_norms
 
-    def update_slip_systems(damask_view, slip_dirs, slip_norms, rve_shape):
+    def update_slip_systems(self, damask_view, slip_dirs, slip_norms, rve_shape):
 
         rot_matrices = damask.Rotation(damask_view.get('O')).reshape(rve_shape, order = 'F').as_matrix()
 
