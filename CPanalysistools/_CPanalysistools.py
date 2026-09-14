@@ -239,22 +239,30 @@ class extractDAMASKdata:
 
         rot_matrices = damask.Rotation(damask_view.get('O')).reshape(rve_shape, order = 'F').as_matrix()
 
-        all_new_slip_dirs = []
-        all_new_slip_norms = []
+        slip_dirs = np.broadcast_to(slip_dirs, [128,128,128,12,3])
+        slip_norms = np.broadcast_to(slip_norms, [128,128,128,12,3])
 
-        for i in range(len(rot_matrices)):
-            new_slip_dirs = []
-            new_slip_norms = []
-            for j in range(len(slip_dirs)):
-                new_slip_dir = rot_matrices[i] @ slip_dirs[j]
-                new_slip_norm = rot_matrices[i] @ slip_norms[j]
-                new_slip_dirs.append(new_slip_dir)
-                new_slip_norms.append(new_slip_norm)
+        new_slip_dirs = np.einsum('...ij, ...ki -> ...kj', rot_matrices, slip_dirs)
+        new_slip_norms = np.einsum('...ij, ...ki -> ...kj', rot_matrices, slip_norms)
+
+        #rot_matrices = damask.Rotation(damask_view.get('O')).reshape(rve_shape, order = 'F').as_matrix()
+
+        #all_new_slip_dirs = []
+        #all_new_slip_norms = []
+
+        #for i in range(len(rot_matrices)):
+        #    new_slip_dirs = []
+        #    new_slip_norms = []
+        #    for j in range(len(slip_dirs)):
+        #        new_slip_dir = rot_matrices[i] @ slip_dirs[j]
+        #        new_slip_norm = rot_matrices[i] @ slip_norms[j]
+        #        new_slip_dirs.append(new_slip_dir)
+        #        new_slip_norms.append(new_slip_norm)
             
-            all_new_slip_dirs.append(new_slip_dirs)
-            all_new_slip_norms.append(new_slip_norms)
+        #    all_new_slip_dirs.append(new_slip_dirs)
+        #    all_new_slip_norms.append(new_slip_norms)
 
-        return all_new_slip_dirs, all_new_slip_norms
+        return new_slip_dirs, new_slip_norms
 
     def extract_accum_plastic_strain_energy_density(self, damask_file, mat_file, rve_shape):
         result = damask.Result(damask_file)
@@ -265,18 +273,21 @@ class extractDAMASKdata:
 
         for i in range(len(result.increments)):
             x = result.view(increments = result.increments[i])
-            gamma = x.get('gamma_sl').reshape(rve_shape.append(12), order = 'F')
+            gamma = x.get('gamma_sl').reshape([rve_shape[0], rve_shape[1], rve_shape[2], 12], order = 'F')#rve_shape.append(12), order = 'F')
 
             if i == 0:
-                new_slip_dirs, new_slip_norms = slip_dirs, slip_norms
+                #new_slip_dirs, new_slip_norms = slip_dirs, slip_norms
+                new_slip_dirs = np.broadcast_to(slip_dirs, [128,128,128,12,3])
+                new_slip_norms = np.broadcast_to(slip_norms, [128,128,128,12,3])
 
             else:
                 new_slip_dirs, new_slip_norms = self.update_slip_systems(x, slip_dirs, slip_norms, rve_shape)
 
-            sigma = x.get('sigma').reshape(rve_shape.extend([3,3]), order = 'F')
+            sigma = x.get('sigma').reshape([rve_shape[0], rve_shape[1], rve_shape[2], 3, 3], order = 'F')
 
             # Calculate resolved shear stresses
-            tau = np.einsum('vij,vsi,vsj->vs', sigma, new_slip_dirs, new_slip_norms)
+            #tau = np.einsum('vij,vsi,vsj->vs', sigma, new_slip_dirs, new_slip_norms)
+            tau = np.einsum('...ij, ...si, ...sj -> ...s', sigma, new_slip_dirs, new_slip_norms)
 
             plastic_work = np.abs(np.multiply(tau, gamma))
 
