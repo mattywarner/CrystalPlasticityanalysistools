@@ -271,7 +271,7 @@ class extractDAMASKdata:
 
         total_plastic_work_arrs = []
 
-        for i in range(len(result.increments)):
+        for i in tqdm(range(len(result.increments))):
             x = result.view(increments = result.increments[i])
             gamma = x.get('gamma_sl').reshape([rve_shape[0], rve_shape[1], rve_shape[2], 12], order = 'F')#rve_shape.append(12), order = 'F')
 
@@ -303,7 +303,7 @@ class extractDAMASKdata:
 
         accum_plastic_work = np.sum(total_plastic_work_arrs, axis = 0)
 
-        return accum_plastic_work
+        return total_plastic_work_arrs, accum_plastic_work
 
 ### 4. Extracting grain boundaries ###
 
