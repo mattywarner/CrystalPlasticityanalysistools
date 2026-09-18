@@ -277,8 +277,8 @@ class extractDAMASKdata:
 
             if i == 0:
                 #new_slip_dirs, new_slip_norms = slip_dirs, slip_norms
-                new_slip_dirs = np.broadcast_to(slip_dirs, [128,128,128,12,3])
-                new_slip_norms = np.broadcast_to(slip_norms, [128,128,128,12,3])
+                new_slip_dirs = np.broadcast_to(slip_dirs, [rve_shape[0],rve_shape[1],rve_shape[2],12,3])
+                new_slip_norms = np.broadcast_to(slip_norms, [rve_shape[0],rve_shape[1],rve_shape[2],12,3])
 
             else:
                 new_slip_dirs, new_slip_norms = self.update_slip_systems(x, slip_dirs, slip_norms, rve_shape)
