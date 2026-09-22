@@ -508,7 +508,7 @@ def comparison_plot(data_1, data_2, xlabel, ylabel,
     if max_interval==None:
         max_interval =  max(max(data_1), max(data_2)) + 0.05*np.abs(max(max(data_1), max(data_2)))
 
-    ax.plot(data_1, data_2, 'bo', ls = 'None', label = 'CP model predictions', alpha = 0.1)
+    ax.plot(data_1, data_2, 'bo', ls = 'None', label = 'CP model predictions', alpha = 0.5)
     ax.axline(diag_line_start, slope = 1, color = 'r', label = 'Equal predictions')
   
     ax.set_xlabel(fr'{xlabel}', fontsize = 24, math_fontfamily = 'cm')
